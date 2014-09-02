@@ -42,6 +42,11 @@
 		<!--<version>1.5.0</version>-->
 		<!--</dependency>-->
 
+		<dependency>
+			<groupId>org.geomajas.plugin</groupId>
+			<artifactId>geomajas-client-gwt2-plugin-corewidget-example-jar</artifactId>
+		</dependency>
+
 		<!-- Geomajas Dependencies -->
 		<dependency>
 			<groupId>org.geomajas</groupId>

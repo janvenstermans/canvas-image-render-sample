@@ -11,7 +11,7 @@
 
 package dummy.standalone.example.client;
 
-import dummy.standalone.example.client.sample.CanvasImageChangeColorPanel;
+import dummy.standalone.example.client.sample.canvasimagecolor.CanvasImageChangeColorPanel;
 import org.geomajas.gwt2.example.base.client.sample.SamplePanel;
 import org.geomajas.gwt2.example.base.client.sample.SamplePanelRegistry;
 import org.geomajas.gwt2.example.base.client.sample.ShowcaseSampleDefinition;

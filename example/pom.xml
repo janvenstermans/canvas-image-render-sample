@@ -24,11 +24,6 @@
 
 	<name>Geomajas Standalone - Example Application</name>
 	<description>Geomajas Standalone - Example Application</description>
-	
-	<properties>
-		<gwt-version>2.5.0</gwt-version>
-		<gwt.compiler.skip>false</gwt.compiler.skip>
-	</properties>
 
 	<dependencies>
 		<dependency>
