@@ -18,7 +18,7 @@ package dummy.standalone.example.client.sample.canvasimagecolor;
  */
 public class HistogramData {
 
-	public final static int RANGE = 256;
+	public static final int RANGE = 256;
 
 	private int[] hitArray;
 

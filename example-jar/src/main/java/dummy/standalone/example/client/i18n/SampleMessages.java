@@ -14,58 +14,10 @@ package dummy.standalone.example.client.i18n;
 import com.google.gwt.i18n.client.Messages;
 
 /**
- * Specific messages for the print samples.
+ * Specific messages for the samples.
  * 
  * @author Jan De Moerloose
  */
 public interface SampleMessages extends Messages {
 
-	String printTitle();
-
-	String printShort();
-
-	String printDescription();
-
-	/* custom view */
-
-	String printCustomViewTitle();
-
-	String printCustomViewShort();
-
-	String printCustomViewDescription();
-
-	String printCustomViewFileName();
-
-	/* custom handler */
-
-	String printCustomHandlerTitle();
-
-	String printCustomHandlerShort();
-
-	String printCustomHandlerDescription();
-
-	String printCustomHandlerTitleInitial();
-	String printCustomHandlerTitleRequestStart();
-	String printCustomHandlerTitleRequestFinish();
-	String printCustomHandlerTypeLabel(String type);
-	String printCustomHandlerUrlLabel();
-
-	/* svg layer */
-	String printSvgLayerTitle();
-
-	String printSvgLayerShort();
-
-	String printSvgLayerDescription();
-
-	/* without widget */
-
-	String printServiceExampleTitle();
-
-	String printServiceExampleShort();
-
-	String printServiceExampleDescription();
-
-	String printServiceExampleFixedFileName();
-
-	String printServiceExampleFixedPrintTitle();
 }

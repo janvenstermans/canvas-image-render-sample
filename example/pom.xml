@@ -119,7 +119,7 @@
 					</dependency>
 				</dependencies>
 				<configuration>
-					<module>org.geomajas.gwt2.plugin.print.example.PrintExample</module>
+					<module>dummy.standalone.example.StandaloneExample</module>
 					<runTarget>index.html</runTarget>
 					<disableCastChecking>true</disableCastChecking>
 					<disableClassMetadata>true</disableClassMetadata>

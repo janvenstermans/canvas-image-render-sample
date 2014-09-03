@@ -21,14 +21,12 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import org.moxieapps.gwt.highcharts.client.Chart;
 import org.moxieapps.gwt.highcharts.client.ChartTitle;
 import org.moxieapps.gwt.highcharts.client.Series;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,46 +71,12 @@ public class ImageAnalysisPanel implements IsWidget {
 	@UiField
 	protected RadioButton dataCurrentRadioButton;
 
-	@UiField
-	protected TextBox redMinText;
-
-	@UiField
-	protected TextBox redMaxText;
-
-	@UiField
-	protected TextBox greenMinText;
-
-	@UiField
-	protected TextBox greenMaxText;
-
-	@UiField
-	protected TextBox blueMinText;
-
-	@UiField
-	protected TextBox blueMaxText;
-
 	private CanvasImageWithRadiometryElement element;
-	//;
-	private Map<ImageDataUtil.RadiometryValue, TextBox> minTextBoxes;
-	private Map<ImageDataUtil.RadiometryValue, TextBox> maxTextBoxes;
 
 	public ImageAnalysisPanel() {
 		UI_BINDER.createAndBindUi(this);
-		minTextBoxes = new HashMap<ImageDataUtil.RadiometryValue, TextBox>();
-		minTextBoxes.put(ImageDataUtil.RadiometryValue.RED, redMinText);
-		minTextBoxes.put(ImageDataUtil.RadiometryValue.GREEN, greenMinText);
-		minTextBoxes.put(ImageDataUtil.RadiometryValue.BLUE, blueMinText);
-		maxTextBoxes = new HashMap<ImageDataUtil.RadiometryValue, TextBox>();
-		maxTextBoxes.put(ImageDataUtil.RadiometryValue.RED, redMaxText);
-		maxTextBoxes.put(ImageDataUtil.RadiometryValue.GREEN, greenMaxText);
-		maxTextBoxes.put(ImageDataUtil.RadiometryValue.BLUE, blueMaxText);
-		for (TextBox textBox : minTextBoxes.values()) {
-			textBox.setEnabled(false);
-		}
-		for (TextBox textBox : maxTextBoxes.values()) {
-			textBox.setEnabled(false);
-		}
 		dataOriginalRadioButton.setValue(true);
+		checkBoxAlpha.setValue(true);
 	}
 
 	public Widget asWidget() {
@@ -121,7 +85,7 @@ public class ImageAnalysisPanel implements IsWidget {
 
 	public void setCanvasImageWithRadiometry(CanvasImageWithRadiometryElement element) {
 		this.element = element;
-		updateImageRadiometry(element.getImageRadiometry());
+		updateChart();
 	}
 
 	@UiHandler("drawDataBtn")
@@ -129,19 +93,7 @@ public class ImageAnalysisPanel implements IsWidget {
 		updateChart();
 	}
 
-	public void updateImageRadiometry(ImageRadiometry imageRadiometry) {
-		for (ImageDataUtil.RadiometryValue radiometryValue : ImageDataUtil.getRGB()) {
-			minTextBoxes.get(radiometryValue).setText("" + imageRadiometry.getMin(radiometryValue));
-			maxTextBoxes.get(radiometryValue).setText("" + imageRadiometry.getMax(radiometryValue));
-		}
-		if (dataCurrentRadioButton.getValue()) {
-			updateChart();
-		}
-	}
-
-	/* private methods */
-
-	private void updateChart() {
+	public void updateChart() {
 		chart.clear();
 		List<ImageDataUtil.RadiometryValue> radiometryValues = new ArrayList<ImageDataUtil.RadiometryValue>();
 		if (checkBoxAlpha.getValue()) {
@@ -159,6 +111,8 @@ public class ImageAnalysisPanel implements IsWidget {
 		chart.add(createChartForHistogramValues(radiometryValues.toArray(
 				new ImageDataUtil.RadiometryValue[radiometryValues.size()])));
 	}
+
+	/* private methods */
 
 	private Chart createChartForHistogramValues(ImageDataUtil.RadiometryValue... radiometryValues) {
 		Map<ImageDataUtil.RadiometryValue, HistogramData> colorInfoMap = null;

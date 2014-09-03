@@ -1,7 +1,12 @@
 /*
- * This is part of the Spacemetric Keystone Web Portal.
+ * This is part of Geomajas, a GIS framework, http://www.geomajas.org/.
  *
- * Copyright 2011 Spacemetric, http://www.spacemetric.com/, Sweden.
+ * Copyright 2008-2014 Geosparc nv, http://www.geosparc.com/, Belgium.
+ *
+ * The program is available in open source according to the GNU Affero
+ * General Public License. All contributions in this program are covered
+ * by the Geomajas Contributors License Agreement. For full licensing
+ * details, see LICENSE.txt in the project root.
  */
 package dummy.standalone.example.client.sample.canvasimagecolor;
 
@@ -50,7 +55,8 @@ public class CanvasImageWithRadiometryElement implements CanvasShape {
 		context2d.scale(xReversal ? -1 : 1, yReversal ? -1 : 1);
 		double xValue = xReversal ? box.getMaxX() * -1 : box.getX();
 		double yValue = yReversal ? box.getMaxY() * -1 : box.getY();
-		context2d.drawImage(colorAdjustedHiddenImageCanvas.getCanvasElement(), xValue, yValue, box.getWidth(), box.getHeight());
+		context2d.drawImage(colorAdjustedHiddenImageCanvas.getCanvasElement(),
+				xValue, yValue, box.getWidth(), box.getHeight());
 		context2d.restore();
 	}
 

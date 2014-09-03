@@ -11,12 +11,7 @@
 
 package dummy.standalone.example.client.sample.canvasimagecolor;
 
-import com.google.gwt.canvas.dom.client.CanvasPixelArray;
-import com.google.gwt.canvas.dom.client.ImageData;
-
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Contains integer values that indicate the color transformation of an image.
@@ -29,17 +24,17 @@ import java.util.Map;
 public class ImageRadiometry {
 
 	/**
-	 * Holder for minimum values (black-point)
+	 * Holder for minimum values (black-point).
 	 */
 	private int[] minArray;
 
 	/**
-	 * Holder for maximum values (white point)
+	 * Holder for maximum values (white point).
 	 */
 	private int[] maxArray;
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	public ImageRadiometry() {
 		minArray = new int[getRadiometryDimension()];
@@ -48,13 +43,13 @@ public class ImageRadiometry {
 	}
 
 	/**
-	 * Construct a new ImageRadiometry with the same values as the inRadiometry
+	 * Construct a new ImageRadiometry with the same values as the inRadiometry.
 	 * @param inRadiometry
 	 */
 	public ImageRadiometry(ImageRadiometry inRadiometry) {
 		this();
 		// copy values
-		for (int i=0; i < getRadiometryDimension(); i++) {
+		for (int i = 0; i < getRadiometryDimension(); i++) {
 			minArray[i] = inRadiometry.minArray[i];
 			maxArray[i] = inRadiometry.maxArray[i];
 		}
@@ -64,28 +59,28 @@ public class ImageRadiometry {
 	 * Set the minimum value of a dimension.
 	 */
 	public void setMin(ImageDataUtil.RadiometryValue radiometryValue, int min) {
-		minArray[radiometryValue.value] = min;
+		minArray[radiometryValue.getValue()] = min;
 	}
 
 	/**
 	 * Set the maximum value of a dimension.
 	 */
 	public void setMax(ImageDataUtil.RadiometryValue radiometryValue, int max) {
-		maxArray[radiometryValue.value] = max;
+		maxArray[radiometryValue.getValue()] = max;
 	}
 
 	/**
 	 * Get the minimum value of a dimension.
 	 */
 	public int getMin(ImageDataUtil.RadiometryValue radiometryValue) {
-		return minArray[radiometryValue.value];
+		return minArray[radiometryValue.getValue()];
 	}
 
 	/**
 	 * Get the maximum value of a dimension.
 	 */
 	public int getMax(ImageDataUtil.RadiometryValue radiometryValue) {
-		return maxArray[radiometryValue.value];
+		return maxArray[radiometryValue.getValue()];
 	}
 
 	/* (non-Javadoc)

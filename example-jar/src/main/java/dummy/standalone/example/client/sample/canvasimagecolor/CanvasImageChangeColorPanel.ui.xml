@@ -5,127 +5,40 @@
 	<ui:with field='resource' type='org.geomajas.gwt2.example.base.client.resource.ShowcaseResource' />
 
 	<g:DockLayoutPanel unit="PX" width="100%" height="100%">
-		<g:west size="250">
+		<g:west size="300">
 			<g:ScrollPanel>
 			<g:VerticalPanel>
 				<g:HTMLPanel addStyleNames="{resource.css.sampleLeftLayout}">
 					<h2>Image:</h2>
 					<g:VerticalPanel spacing="10">
 						<g:Button ui:field="drawImageButton" width="180px">Draw Image in center</g:Button>
-						<g:Button ui:field="invertColorsBtn" width="180px">Invert colors</g:Button>
-						<g:Label width="180px" text="Analysis"/>
-						<g:Button ui:field="analyseBtn" width="180px">Analyse</g:Button>
-						<g:Label ui:field="label" width="180px"/>
-						<g:HTMLPanel>
-							<table>
-								<tr>
-									<td>
-										<g:Label text="RED"/>
-									</td>
-									<td>
-										<g:Label text="MIN:"/>
-									</td>
-									<td>
-										<g:TextBox width="30px" ui:field="redMinText"/>
-									</td>
-									<td>
-										<g:Label text="MAX:"/>
-									</td>
-									<td>
-										<g:TextBox width="30px" ui:field="redMaxText"/>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<g:Label text="GREEN"/>
-									</td>
-									<td>
-										<g:Label text="MIN:"/>
-									</td>
-									<td>
-										<g:TextBox width="30px" ui:field="greenMinText"/>
-									</td>
-									<td>
-										<g:Label text="MAX:"/>
-									</td>
-									<td>
-										<g:TextBox width="30px" ui:field="greenMaxText"/>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<g:Label text="BLUE"/>
-									</td>
-									<td>
-										<g:Label text="MIN:"/>
-									</td>
-									<td>
-										<g:TextBox width="30px" ui:field="blueMinText"/>
-									</td>
-									<td>
-										<g:Label text="MAX:"/>
-									</td>
-									<td>
-										<g:TextBox width="30px" ui:field="blueMaxText"/>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="5">
-										<g:Button width="180px" ui:field="imageRadiometryBtn">Apply RGB bounds</g:Button>
-									</td>
-								</tr>
-							</table>
-						</g:HTMLPanel>
-						<g:HTMLPanel>
-							<table>
-								<tr>
-									<td colspan="2">
-										<g:Label text="RED-LOW"/>
-									</td>
-									<td colspan="2">
-										<g:Label text="RED-HIGH"/>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<g:Button width="30px" ui:field="redLowMinBtn">--</g:Button>
-									</td>
-									<td>
-										<g:Button width="30px" ui:field="redLowPlusBtn">++</g:Button>
-									</td>
-									|
-									<td>
-										<g:Button width="30px" ui:field="redHighMinBtn">--</g:Button>
-									</td>
-									<td>
-										<g:Button width="30px" ui:field="redHighPlusBtn">++</g:Button>
-									</td>
-								</tr>
-								<!--<tr>-->
-									<!--<td>-->
-										<!--<g:Label text="GREEN"/>-->
-									<!--</td>-->
-									<!--<td>-->
-										<!--<g:Button width="30px" ui:field="greenMinBtn">--</g:Button>-->
-									<!--</td>-->
-									<!--<td>-->
-										<!--<g:Button width="30px" ui:field="greenPlusBtn">++</g:Button>-->
-									<!--</td>-->
-								<!--</tr>-->
-								<!--<tr>-->
-									<!--<td>-->
-										<!--<g:Label text="BLUE"/>-->
-									<!--</td>-->
-									<!--<td>-->
-										<!--<g:Button width="30px" ui:field="blueMinBtn">--</g:Button>-->
-									<!--</td>-->
-									<!--<td>-->
-										<!--<g:Button width="30px" ui:field="bluePlusBtn">++</g:Button>-->
-									<!--</td>-->
-								<!--</tr>-->
-							</table>
-						</g:HTMLPanel>
 						<g:Button ui:field="clearCanvas" width="180px">Clear</g:Button>
+						<g:Label ui:field="label" width="180px"/><!-- for warning -->
+
+						<g:CaptionPanel ui:field="imageRadiometryCaptionPanel"/>
+						<g:Button ui:field="imageRadiometryBtn" width="180px">Apply Image Radiometry</g:Button>
+						<g:Button ui:field="analyseBtn" width="180px">Color Histograms</g:Button>
+						<g:Button ui:field="resetBtn" width="180px">Reset</g:Button>
+						<g:CaptionPanel ui:field="imageRadiometryChangeCaptionPanel">
+							<g:VerticalPanel>
+								<g:HTMLPanel>
+									<table>
+										<tr>
+											<td>
+												<g:Label width="100px" text="% change (int):"/>
+											</td>
+											<td>
+												<g:TextBox width="20px"
+														   ui:field="imageRadiometryChangePercentageTextBox" text="5"/>
+											</td>
+										</tr>
+									</table>
+								</g:HTMLPanel>
+
+
+								<g:SimplePanel ui:field="imageRadiometryChangeButtonSimplePanel"/>
+							</g:VerticalPanel>
+						</g:CaptionPanel>
 					</g:VerticalPanel>
 				</g:HTMLPanel>
 			</g:VerticalPanel>

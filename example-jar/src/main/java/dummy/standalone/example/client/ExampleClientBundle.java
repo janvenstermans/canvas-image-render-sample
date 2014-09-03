@@ -16,14 +16,17 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
- * {@link com.google.gwt.resources.client.ClientBundle} for the examples
+ * {@link com.google.gwt.resources.client.ClientBundle} for the examples.
  *
  * @author Jan Venstermans
  */
 public interface ExampleClientBundle extends ClientBundle {
 
-	public static final ExampleClientBundle INSTANCE = GWT.create(ExampleClientBundle.class);
+	ExampleClientBundle INSTANCE = GWT.create(ExampleClientBundle.class);
 
 	@Source("image/tuxTest.png")
 	ImageResource imageTuxTest();
+
+	@Source("image/satelliteImage1.png")
+	ImageResource imageSatellite1();
 }

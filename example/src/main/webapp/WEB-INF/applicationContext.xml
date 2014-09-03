@@ -16,4 +16,52 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
 http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
+	<bean id="corsFilter" class="dummy.standalone.example.CrossOriginFilter" />
+
+	<bean name="defaultInfinispanCacheConfig" class="org.geomajas.plugin.caching.configuration.CacheInfo">
+		<property name="configuration">
+			<map>
+				<entry>
+					<key><util:constant static-field="org.geomajas.plugin.caching.service.CacheCategory.BOUNDS" /></key>
+					<bean class="org.geomajas.plugin.caching.infinispan.configuration.SimpleInfinispanCacheInfo">
+						<property name="maxEntries" value="512" />
+					</bean>
+				</entry>
+				<entry>
+					<key><util:constant static-field="org.geomajas.plugin.caching.service.CacheCategory.FEATURE" /></key>
+					<bean class="org.geomajas.plugin.caching.infinispan.configuration.SimpleInfinispanCacheInfo">
+						<property name="maxEntries" value="512" />
+					</bean>
+				</entry>
+				<entry>
+					<key><util:constant static-field="org.geomajas.plugin.caching.service.CacheCategory.TILE" /></key>
+					<bean class="org.geomajas.plugin.caching.infinispan.configuration.SimpleInfinispanCacheInfo">
+						<property name="maxEntries" value="2048" />
+					</bean>
+				</entry>
+				<entry>
+					<key><util:constant static-field="org.geomajas.plugin.caching.service.CacheCategory.RASTER" /></key>
+					<bean class="org.geomajas.plugin.caching.infinispan.configuration.SimpleInfinispanCacheInfo">
+						<property name="maxEntries" value="64" />
+						<property name="evictionStrategy">
+							<util:constant static-field="org.infinispan.eviction.EvictionStrategy.LRU" />
+						</property>
+						<property name="expiration" value="10080" /> <!-- 60*24*7, keep entries a week -->
+						<property name="level2CacheLocation" value="${geomajasCacheLocation}/SPACE-163/raster" />
+					</bean>
+				</entry>
+				<entry>
+					<key><util:constant static-field="org.geomajas.plugin.caching.service.CacheCategory.REBUILD" /></key>
+					<bean class="org.geomajas.plugin.caching.infinispan.configuration.SimpleInfinispanCacheInfo">
+						<property name="maxEntries" value="2048" />
+						<property name="evictionStrategy">
+							<util:constant static-field="org.infinispan.eviction.EvictionStrategy.LRU" />
+						</property>
+						<property name="expiration" value="2880" /> <!-- 60*24*2, keep entries two days -->
+						<property name="level2CacheLocation" value="${geomajasCacheLocation}/SPACE-163/rebuild" />
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
 </beans>

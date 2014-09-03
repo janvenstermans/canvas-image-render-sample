@@ -12,6 +12,7 @@
 package dummy.standalone.example.client.sample.canvasimagecolor;
 
 import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -19,12 +20,12 @@ import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CaptionPanel;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ResizeLayoutPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import dummy.standalone.example.client.ExampleClientBundle;
@@ -34,13 +35,11 @@ import org.geomajas.gwt2.client.GeomajasServerExtension;
 import org.geomajas.gwt2.client.event.MapInitializationEvent;
 import org.geomajas.gwt2.client.event.MapInitializationHandler;
 import org.geomajas.gwt2.client.gfx.CanvasContainer;
-import org.geomajas.gwt2.client.gfx.CanvasRect;
 import org.geomajas.gwt2.client.map.MapPresenter;
 import org.geomajas.gwt2.example.base.client.sample.SamplePanel;
 import org.geomajas.gwt2.example.base.client.widget.ShowcaseDialogBox;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * ContentPanel that demonstrates canvas rendering abilities.
@@ -63,6 +62,8 @@ public class CanvasImageChangeColorPanel implements SamplePanel {
 
 	private CanvasContainer container;
 
+	private static Logger logger = Logger.getLogger(CanvasImageChangeColorPanel.class.getName());
+
 	@UiField
 	protected ResizeLayoutPanel mapPanel;
 
@@ -70,26 +71,20 @@ public class CanvasImageChangeColorPanel implements SamplePanel {
 	protected Label label;
 
 	@UiField
-	protected TextBox redMinText;
+	protected CaptionPanel imageRadiometryCaptionPanel;
 
 	@UiField
-	protected TextBox redMaxText;
+	protected CaptionPanel imageRadiometryChangeCaptionPanel;
 
 	@UiField
-	protected TextBox greenMinText;
+	protected SimplePanel imageRadiometryChangeButtonSimplePanel;
 
 	@UiField
-	protected TextBox greenMaxText;
+	protected TextBox imageRadiometryChangePercentageTextBox;
 
-	@UiField
-	protected TextBox blueMinText;
+	private ImageRadiometryPanel imageRadiometryPanel;
 
-	@UiField
-	protected TextBox blueMaxText;
-
-	private Map<ImageDataUtil.RadiometryValue, TextBox> minTextBoxes;
-
-	private Map<ImageDataUtil.RadiometryValue, TextBox> maxTextBoxes;
+	private ImageRadiometryChangeButtonPanel imageRadiometryChangeButtonPanel;
 
 	private CanvasImageWithRadiometryElement latestCanvasImageElement;
 
@@ -114,14 +109,15 @@ public class CanvasImageChangeColorPanel implements SamplePanel {
 		GeomajasServerExtension.getInstance().initializeMap(mapPresenter, "gwt-app", "mapOsm");
 		label.setVisible(false);
 
-		minTextBoxes = new HashMap<ImageDataUtil.RadiometryValue, TextBox>();
-		minTextBoxes.put(ImageDataUtil.RadiometryValue.RED, redMinText);
-		minTextBoxes.put(ImageDataUtil.RadiometryValue.GREEN, greenMinText);
-		minTextBoxes.put(ImageDataUtil.RadiometryValue.BLUE, blueMinText);
-		maxTextBoxes = new HashMap<ImageDataUtil.RadiometryValue, TextBox>();
-		maxTextBoxes.put(ImageDataUtil.RadiometryValue.RED, redMaxText);
-		maxTextBoxes.put(ImageDataUtil.RadiometryValue.GREEN, greenMaxText);
-		maxTextBoxes.put(ImageDataUtil.RadiometryValue.BLUE, blueMaxText);
+		imageRadiometryPanel = new ImageRadiometryPanel();
+		imageRadiometryPanel.setContrastTextBoxEnabled(false);
+		imageRadiometryPanel.setRgbTextBoxEnabled(true);
+		imageRadiometryCaptionPanel.setCaptionText("Image Radiometry");
+		imageRadiometryCaptionPanel.add(imageRadiometryPanel);
+
+		imageRadiometryChangeCaptionPanel.setCaptionText("Change Image");
+		imageRadiometryChangeButtonPanel = new ImageRadiometryChangeButtonPanel(this);
+		imageRadiometryChangeButtonSimplePanel.add(imageRadiometryChangeButtonPanel);
 
 		closeableDialogBox = new ShowcaseDialogBox();
 		closeableDialogBox.setGlassEnabled(false);
@@ -142,25 +138,12 @@ public class CanvasImageChangeColorPanel implements SamplePanel {
 		if (container != null) {
 			Bbox boundsCenter = getCurrentQuarterCenterBounds();
 
-			// draw a tux  in the center
-			SafeUri uri = ExampleClientBundle.INSTANCE.imageTuxTest().getSafeUri();
-			ImageElement imgElement = ImageElement.as((new Image(uri)).getElement());
-			latestCanvasImageElement = drawImageFromImageElement(imgElement, boundsCenter, container);
-			applyImageRadiometry(latestCanvasImageElement.getImageRadiometry());
-			container.repaint();
-		}
-	}
+			// draw an image  in the center
+			//SafeUri uri = ExampleClientBundle.INSTANCE.imageTuxTest().getSafeUri();
+			SafeUri uri = ExampleClientBundle.INSTANCE.imageSatellite1().getSafeUri();
+			drawImageFromUrl(uri.asString(), boundsCenter, container);
 
-	@UiHandler("invertColorsBtn")
-	public void onInvertColorsBtnClicked(ClickEvent event) {
-		if (latestCanvasImageElement != null) {
-			try {
-				latestCanvasImageElement.putImageData(ImageDataUtil.invertColors(
-						latestCanvasImageElement.getImageData()));
-				container.repaint();
-			} catch (Exception ex)  {
-				// do nothing
-			}
+//			drawImageFromUrl("http://geosparcidp.com/logo-small.png", boundsCenter, container);
 		}
 	}
 
@@ -172,42 +155,47 @@ public class CanvasImageChangeColorPanel implements SamplePanel {
 		}
 	}
 
-	@UiHandler("imageRadiometryBtn")
-	public void onImageRadiometryBtnClicked(ClickEvent event) {
+	@UiHandler("resetBtn")
+	public void onResetBtnClicked(ClickEvent event) {
 		if (latestCanvasImageElement != null) {
-			latestCanvasImageElement.setImageRadiometry(getImageRadiometryFromTexts());
-			container.repaint();
-			if (closeableDialogBox.isShowing()) {
-				// update data
-				imageAnalysisPanel.updateImageRadiometry(latestCanvasImageElement.getImageRadiometry());
-			}
+			applyImageRadiometry(new ImageRadiometry());
 		}
 	}
 
-	/* general color changes, without brightness change */
-	@UiHandler("redLowMinBtn")
-	public void onRedLowMinBtnClicked(ClickEvent event) {
-		onColorChangeNoBrightness(ImageDataUtil.RadiometryValue.RED, false, false);
-	}
-	@UiHandler("redLowPlusBtn")
-	public void onRedLowPlousBtnClicked(ClickEvent event) {
-		onColorChangeNoBrightness(ImageDataUtil.RadiometryValue.RED, false, true);
-	}
-	@UiHandler("redHighMinBtn")
-	public void onRedHighMinBtnClicked(ClickEvent event) {
-		onColorChangeNoBrightness(ImageDataUtil.RadiometryValue.RED, true, false);
-	}
-	@UiHandler("redHighPlusBtn")
-	public void onRedHighPlousBtnClicked(ClickEvent event) {
-		onColorChangeNoBrightness(ImageDataUtil.RadiometryValue.RED, true, true);
+	@UiHandler("imageRadiometryBtn")
+	public void onImageRadiometryBtnClicked(ClickEvent event) {
+		if (latestCanvasImageElement != null) {
+			applyImageRadiometry(imageRadiometryPanel.getImageRadiometryFromTexts());
+		}
 	}
 
 	/* private methods */
 
-	private void onColorChangeNoBrightness(ImageDataUtil.RadiometryValue radiometryValue, boolean high, boolean plus) {
+	private void applyImageRadiometry(ImageRadiometry imageRadiometry) {
+		latestCanvasImageElement.setImageRadiometry(imageRadiometry);
+		container.repaint();
+		imageRadiometryPanel.showImageRadiometry(imageRadiometry);
+		if (closeableDialogBox.isShowing()) {
+			// update data
+			imageAnalysisPanel.setCanvasImageWithRadiometry(latestCanvasImageElement);
+		}
+	}
+
+	public void onColorChangeNoBrightness(ImageDataUtil.RadiometryValue radiometryValue, boolean high, boolean plus) {
 		if (latestCanvasImageElement != null) {
-			imageAnalysisPanel.updateImageRadiometry(ImageDataUtil.getImageRadiometryColorWithoutBrightnessChange(
-					latestCanvasImageElement.getImageRadiometry(), radiometryValue, high, plus));
+			ImageRadiometry newImageRadiometry = ImageDataUtil.getImageRadiometryColorWithoutBrightnessChange(
+					latestCanvasImageElement.getImageRadiometry(), radiometryValue, high, plus,
+					Integer.parseInt(imageRadiometryChangePercentageTextBox.getText()) / 100.0);
+			applyImageRadiometry(newImageRadiometry);
+		}
+	}
+
+	public void onChangeBrightness(boolean high, boolean plus) {
+		if (latestCanvasImageElement != null) {
+			ImageRadiometry newImageRadiometry = ImageDataUtil.getImageRadiometryBrightnessChange(
+					latestCanvasImageElement.getImageRadiometry(), high, plus,
+					Integer.parseInt(imageRadiometryChangePercentageTextBox.getText()) / 100.0);
+			applyImageRadiometry(newImageRadiometry);
 		}
 	}
 
@@ -216,33 +204,13 @@ public class CanvasImageChangeColorPanel implements SamplePanel {
 		closeableDialogBox.center();
 	}
 
-	private void applyImageRadiometry(ImageRadiometry imageRadiometry) {
-		for (ImageDataUtil.RadiometryValue radiometryValue : ImageDataUtil.getRGB()) {
-			minTextBoxes.get(radiometryValue).setText("" + imageRadiometry.getMin(radiometryValue));
-			maxTextBoxes.get(radiometryValue).setText("" + imageRadiometry.getMax(radiometryValue));
-		}
-	}
-
 	private Bbox getCurrentQuarterCenterBounds() {
 		Bbox bbox = mapPresenter.getViewPort().getBounds();
 		double centerX = ( bbox.getX() + bbox.getMaxX()) / 2;
 		double centerY = ( bbox.getY() + bbox.getMaxY()) / 2;
 		double width = bbox.getWidth() / 4;
 		double height = bbox.getHeight() / 4;
-		return new Bbox(centerX - width /2, centerY - height / 2 ,width ,height);
-	}
-
-	private ImageRadiometry getImageRadiometryFromTexts() {
-		ImageRadiometry imageRadiometry = new ImageRadiometry();
-		ImageDataUtil.RadiometryValue[] radiometryValues = new ImageDataUtil.RadiometryValue[] {
-				ImageDataUtil.RadiometryValue.RED, ImageDataUtil.RadiometryValue.GREEN,
-				ImageDataUtil.RadiometryValue.BLUE
-		};
-		for (ImageDataUtil.RadiometryValue radiometryValue : radiometryValues) {
-		   imageRadiometry.setMin(radiometryValue, Integer.parseInt(minTextBoxes.get(radiometryValue).getText()));
-		   imageRadiometry.setMax(radiometryValue, Integer.parseInt(maxTextBoxes.get(radiometryValue).getText()));
-		}
-		return imageRadiometry;
+		return new Bbox(centerX - width / 2, centerY - height / 2, width, height);
 	}
 
 	private CanvasImageWithRadiometryElement drawImageFromImageElement(ImageElement imageElement,
@@ -251,6 +219,24 @@ public class CanvasImageChangeColorPanel implements SamplePanel {
 				new CanvasImageWithRadiometryElement(imageElement, bounds);
 		canvasContainer.addShape(canvasImageElement);
 		return canvasImageElement;
+	}
+
+	private void drawImageFromUrl(String url, final Bbox bounds, final CanvasContainer canvasContainer) {
+		new ImageLoaderCrossOrigin(url,
+				new Callback<ImageElement, String>() {
+					@Override
+					public void onFailure(String s) {
+
+					}
+
+					@Override
+					public void onSuccess(ImageElement imageElement) {
+						latestCanvasImageElement = drawImageFromImageElement(imageElement, bounds, canvasContainer);
+						imageRadiometryPanel.showImageRadiometry(latestCanvasImageElement.getImageRadiometry());
+						container.repaint();
+					}
+				});
+		container.repaint();
 	}
 
 	/**
